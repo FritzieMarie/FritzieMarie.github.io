@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fritzie Marie Igot - Terminal Operations</title>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ── Reset & Base ── */
+    :root {
+      --primary: #0ea5e9;
+      --primary-hover: #0284c7;
+      --bg-dark: #080f1e;
+      --bg-card-dark: #111827;
+      --border-dark: #1f2937;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { color: var(--text-main); background: #ffffff; line-height: 1.5; }
+    img { display: block; width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Utilities ── */
+    .container { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+    .container--narrow { max-width: 64rem; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ════════════════════════════════════
+       HERO SECTION
+    ════════════════════════════════════ */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+    .hero__bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(8, 15, 30, 0.7) 0%,
+        rgba(8, 15, 30, 0.4) 50%,
+        rgba(8, 15, 30, 0.8) 100%
+      );
+      z-index: 2;
+    }
+    .hero__content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 0 1.5rem;
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .hero__eyebrow svg { width: 1rem; height: 1rem; }
+    .hero__title {
+      font-size: clamp(3.5rem, 8vw, 6rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .hero__title span { display: block; color: var(--primary); }
+    .hero__subtitle {
+      margin-top: 1.5rem;
+      font-size: 1.125rem;
+      color: #cbd5e1;
+      font-weight: 300;
+    }
+    .hero__actions {
+      margin-top: 2.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.875rem 2rem;
+      border-radius: 9999px;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn--primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn--primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+    }
+    .btn--ghost {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .btn--ghost:hover { background: rgba(255,255,255,0.1); }
+
+    /* ════════════════════════════════════
+       ABOUT SECTION
+    ════════════════════════════════════ */
+    .about {
+      padding: 8rem 0;
+      background: #fff;
+    }
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    @media (min-width: 896px) {
+      .about__grid { grid-template-columns: 4fr 5fr; gap: 6rem; }
+    }
+    .about__image-wrap {
+      position: relative;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .about__image-frame {
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      background: #f1f5f9;
+    }
+    .about__image-frame img { width: 100%; height: auto; display: block; }
+    .about__badge {
+      position: absolute;
+      bottom: -1.5rem;
+      right: -1.5rem;
+      background: var(--primary);
+      color: #fff;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 25px rgba(14,165,233,0.3);
+      text-align: left;
+    }
+    .about__badge p:first-child { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+    .about__badge p:last-child  { font-size: 0.75rem; color: #e0f2fe; }
+    
+    .section-label {
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .about__heading {
+      margin-top: 1rem;
+      font-size: clamp(1.875rem, 4vw, 2.5rem);
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+    .about__body {
+      margin-top: 1.5rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 0.9375rem;
+    }
+    .about__body p + p { margin-top: 1rem; }
+
+    /* Highlights */
+    .highlights {
+      margin-top: 6rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) { .highlights { grid-template-columns: repeat(3, 1fr); } }
+    .highlight-card {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border-radius: 1rem;
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .highlight-card:hover { 
+      transform: translateY(-4px); 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border-color: #e2e8f0;
+    }
+    .highlight-card__icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: #e0f2fe;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .highlight-card__icon svg { width: 1.5rem; height: 1.5rem; }
+    .highlight-card h3 { margin-top: 1.25rem; font-size: 1.0625rem; font-weight: 700; color: #0f172a; }
+    .highlight-card p  { margin-top: 0.75rem; font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ════════════════════════════════════
+       AIRPORT SECTION
+    ════════════════════════════════════ */
+    .airport {
+      padding: 8rem 0;
+      background: #ffffff;
+    }
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-header h2 {
+      margin-top: 0.75rem;
+      font-size: clamp(1.875rem, 4vw, 2.5rem);
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .section-header p {
+      margin-top: 1.25rem;
+      color: var(--text-muted);
+      max-width: 48rem;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    .airport__banner {
+      position: relative;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .airport__banner img {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+    }
+    .airport__banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.2) 50%, transparent 100%);
+    }
+    .airport__banner-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .airport__banner-content { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+    }
+    .airport__pin {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .airport__pin svg { width: 1.125rem; height: 1.125rem; }
+    .airport__banner-content h3 { font-size: 1.875rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+    .airport__banner-content p  { color: #cbd5e1; font-size: 0.9375rem; max-width: 32rem; line-height: 1.5; }
+    
+    .btn--glass {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(12px);
+      color: #fff;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+    .btn--glass:hover { background: rgba(255,255,255,0.2); }
+    .btn--glass svg { width: 1rem; height: 1rem; }
+
+    /* Stats */
+    .stats {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+    .stat-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-radius: 1rem;
+      background: #fff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 10px 15px rgba(0,0,0,0.03);
+      border: 1px solid #f1f5f9;
+    }
+    .stat-card__value { font-size: 1.875rem; font-weight: 800; color: var(--primary); }
+    .stat-card__label { margin-top: 0.5rem; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+
+    /* ════════════════════════════════════
+       CONTACT SECTION
+    ════════════════════════════════════ */
+    .contact {
+      padding: 8rem 0;
+      background: var(--bg-dark);
+      position: relative;
+    }
+    .contact .section-label { color: var(--primary); }
+    .contact .section-header h2 { color: #fff; }
+    .contact .section-header p  { color: #94a3b8; }
+    
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+    @media (min-width: 768px)  { .contact-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
+    @media (min-width: 1024px) { .contact-grid { grid-template-columns: repeat(3, 1fr); } }
+    
+    .contact-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      background: var(--bg-card-dark);
+      border: 1px solid var(--border-dark);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+    a.contact-card:hover {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    .contact-card__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      flex-shrink: 0;
+      border-radius: 0.5rem;
+      background: rgba(14, 165, 233, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .contact-card__icon svg { width: 1.125rem; height: 1.125rem; }
+    .contact-card__content { display: flex; flex-direction: column; }
+    .contact-card__label { font-size: 0.65rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 0.25rem; }
+    .contact-card__value { color: #f8fafc; font-weight: 500; font-size: 0.875rem; word-break: break-word; line-height: 1.3; }
+
+    /* ════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════ */
+    .footer {
+      background: #040812;
+      border-top: 1px solid var(--border-dark);
+      padding: 4rem 0 2rem;
+    }
+    .footer__inner {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      border-bottom: 1px solid var(--border-dark);
+      padding-bottom: 3rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 768px) {
+      .footer__inner { flex-direction: row; align-items: flex-start; justify-content: space-between; }
+    }
+    .footer__brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .footer__brand svg { width: 1.25rem; height: 1.25rem; color: var(--primary); }
+    .footer__brand span { color: #fff; font-weight: 700; font-size: 1.125rem; }
+    .footer__tagline { font-size: 0.875rem; color: #64748b; max-width: 22rem; line-height: 1.5; }
+    
+    .footer__links { display: flex; flex-wrap: wrap; gap: 2rem; }
+    .footer__link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #94a3b8;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .footer__link:hover { color: var(--primary); }
+    .footer__link svg { width: 1rem; height: 1rem; }
+    
+    .footer__copy {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════ HERO ══════════════════ -->
+  <section class="hero">
+    <div class="hero__bg">
+      <img src="https://media.base44.com/images/public/6a3aabe3fe94327e570d735b/9cc30320f_02-rubner-holzbau-mactan-airport-08-scaled1.jpg"
+           alt="Mactan-Cebu International Airport Terminal 2 exterior" />
+      <div class="hero__overlay"></div>
+    </div>
+
+    <div class="hero__content">
+      <div class="hero__eyebrow">
+        <i data-lucide="plane"></i>
+        Mactan Cebu International Airport Authority
+      </div>
+
+      <h1 class="hero__title">
+        Fritzie Marie
+        <span>Igot</span>
+      </h1>
+
+      <p class="hero__subtitle">Terminal Operations Officer B</p>
+
+      <div class="hero__actions">
+        <a href="#contact" class="btn btn--primary">Get in Touch</a>
+        <a href="#about" class="btn btn--ghost">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ ABOUT ══════════════════ -->
+  <section id="about" class="about">
+    <div class="container">
+      <div class="about__grid">
+        <!-- Image -->
+        <div class="about__image-wrap">
+          <div class="about__image-frame">
+            <img src="https://media.base44.com/images/public/6a3aabe3fe94327e570d735b/516e04fe0_Screenshot123.png"
+                 alt="Fritzie Marie Igot Portrait" />
+          </div>
+          <div class="about__badge">
+            <p>MCIAA</p>
+            <p>Terminal Operations</p>
+          </div>
+        </div>
+
+        <!-- Text Content -->
+        <div>
+          <span class="section-label">About</span>
+          <h2 class="about__heading">Supporting Excellence <br>Through Safety Management</h2>
+          <div class="about__body">
+            <p>
+              As a Terminal Operations Officer B assigned to the Safety Management Systems (SMS) Unit at the
+              Mactan-Cebu International Airport Authority, I play a key role in fostering a proactive safety
+              culture and ensuring the effective implementation of airport safety management practices. My
+              responsibilities include supporting safety risk assessments, monitoring safety performance,
+              investigating incidents and hazards, and promoting compliance with aviation safety regulations
+              to maintain the highest standards of operational safety.
+            </p>
+            <p>
+              Working within one of the Philippines' busiest international gateways, I contribute to the
+              continuous improvement of safety processes that protect passengers, employees, stakeholders, and
+              airport assets. Through data-driven safety initiatives and collaboration with various airport
+              departments, I help ensure that airport operations remain safe, efficient, and aligned with both
+              national and international aviation standards.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Highlights Grid -->
+      <div class="highlights">
+        <!-- Highlight 1 -->
+        <div class="highlight-card">
+          <div class="highlight-card__icon">
+            <i data-lucide="shield"></i>
+          </div>
+          <h3>Safety & Compliance</h3>
+          <p>Ensuring terminal operations meet the highest safety and regulatory standards at all times.</p>
+        </div>
+        <!-- Highlight 2 -->
+        <div class="highlight-card">
+          <div class="highlight-card__icon">
+            <i data-lucide="clock"></i>
+          </div>
+          <h3>24/7 Operations</h3>
+          <p>Managing round-the-clock terminal activities to keep flights running smoothly and on schedule.</p>
+        </div>
+        <!-- Highlight 3 -->
+        <div class="highlight-card">
+          <div class="highlight-card__icon">
+            <i data-lucide="users"></i>
+          </div>
+          <h3>Passenger Experience</h3>
+          <p>Overseeing terminal services to deliver a seamless and comfortable experience for every traveler.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ AIRPORT / WORKPLACE ══════════════════ -->
+  <section class="airport">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Workplace</span>
+        <h2>Mactan-Cebu International Airport</h2>
+        <p>The second busiest airport in the Philippines, serving as the premier gateway to the Visayas and Mindanao — connecting Cebu to the world.</p>
+      </div>
+
+      <div class="airport__banner">
+        <img src="https://media.base44.com/images/public/6a3aabe3fe94327e570d735b/32507a429_3rd_Steve-Lee.webp"
+             alt="Interior of Mactan-Cebu International Airport Terminal 2" />
+        <div class="airport__banner-overlay"></div>
+        <div class="airport__banner-content">
+          <div>
+            <div class="airport__pin">
+              <i data-lucide="map-pin"></i>
+              Lapu-Lapu City, Cebu, Philippines
+            </div>
+            <h3>MCIAA Terminal 2</h3>
+            <p>Award-winning resort-inspired terminal designed to showcase the warmth and beauty of Cebu.</p>
+          </div>
+          <a href="https://maps.google.com/?q=Mactan+Cebu+International+Airport" target="_blank" rel="noopener noreferrer" class="btn--glass">
+            View on Map
+            <i data-lucide="external-link"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-card__value">IATA</div>
+          <div class="stat-card__label">CEB</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value">12M+</div>
+          <div class="stat-card__label">Passengers/Year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value">2</div>
+          <div class="stat-card__label">Terminals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value">24/7</div>
+          <div class="stat-card__label">Operations</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ CONTACT ══════════════════ -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Contact</span>
+        <h2>Get in Touch</h2>
+        <p>Feel free to reach out through any of the channels below. I'm always happy to connect.</p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Phone -->
+        <a href="tel:09266367638" class="contact-card">
+          <div class="contact-card__icon"><i data-lucide="phone"></i></div>
+          <div class="contact-card__content">
+            <div class="contact-card__label">Mobile Number</div>
+            <div class="contact-card__value">0926 636 7638</div>
+          </div>
+        </a>
+        
+        <!-- Personal Email -->
+        <a href="mailto:igotfritzie14@gmail.com" class="contact-card">
+          <div class="contact-card__icon"><i data-lucide="mail"></i></div>
+          <div class="contact-card__content">
+            <div class="contact-card__label">Personal Email</div>
+            <div class="contact-card__value">igotfritzie14@gmail.com</div>
+          </div>
+        </a>
+        
+        <!-- Office Email -->
+        <a href="mailto:smsmciaa.fmi@gmail.com" class="contact-card">
+          <div class="contact-card__icon"><i data-lucide="mail"></i></div>
+          <div class="contact-card__content">
+            <div class="contact-card__label">Office Email</div>
+            <div class="contact-card__value">smsmciaa.fmi@gmail.com</div>
+          </div>
+        </a>
+        
+        <!-- Position -->
+        <div class="contact-card">
+          <div class="contact-card__icon"><i data-lucide="briefcase"></i></div>
+          <div class="contact-card__content">
+            <div class="contact-card__label">Position</div>
+            <div class="contact-card__value">Terminal Operations Officer B</div>
+          </div>
+        </div>
+        
+        <!-- Organization -->
+        <div class="contact-card">
+          <div class="contact-card__icon"><i data-lucide="building-2"></i></div>
+          <div class="contact-card__content">
+            <div class="contact-card__label">Organization</div>
+            <div class="contact-card__value">Mactan-Cebu International Airport Authority</div>
+          </div>
+        </div>
+        
+        <!-- Location -->
+        <a href="https://maps.google.com/?q=Mactan+Cebu+International+Airport" target="_blank" rel="noopener noreferrer" class="contact-card">
+          <div class="contact-card__icon"><i data-lucide="map-pin"></i></div>
+          <div class="contact-card__content">
+            <div class="contact-card__label">Location</div>
+            <div class="contact-card__value">Lapu-Lapu City, Cebu, Philippines</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ FOOTER ══════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <!-- Brand Info -->
+        <div>
+          <div class="footer__brand">
+            <i data-lucide="plane"></i>
+            <span>Fritzie Marie Igot</span>
+          </div>
+          <p class="footer__tagline">Terminal Operations Officer B at Mactan-Cebu International Airport Authority</p>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer__links">
+          <a href="tel:09266367638" class="footer__link">
+            <i data-lucide="phone"></i>
+            0926 636 7638
+          </a>
+          <a href="mailto:igotfritzie14@gmail.com" class="footer__link">
+            <i data-lucide="mail"></i>
+            igotfritzie14@gmail.com
+          </a>
+        </div>
+      </div>
+      
+      <!-- Copyright -->
+      <div class="footer__copy">
+        © <script>document.write(new Date().getFullYear())</script> Fritzie Marie Igot. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Initialize Lucide Icons -->
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
